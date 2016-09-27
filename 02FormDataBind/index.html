@@ -1,0 +1,39 @@
+<!--http://regularjs.github.io/guide/zh/basic/directive.html-->
+<div id="app"></div>
+
+<script id="hello" type="text/regular" name="hello">
+    <input type="text" ng-model={user.name} >
+</script>
+
+
+<!-- 引入regular.js -->
+<script src="https://rawgit.com/regularjs/regular/master/dist/regular.js"></script>
+
+
+<script>
+    Regular.directive("ng-model", function(elem, exression){
+        // make sure the  exression is An Expression
+        console.log('---');
+        var self = this;
+        this.$watch( exression, function( nval ){
+            console.log('watch', nval);
+            elem.value = nval;
+        })
+
+        elem.addEventListener("input", function(){
+            console.log('listen', this.value);
+            self.$update(exression, this.value); // enter digest
+        })
+    });
+
+    var HelloRegular = Regular.extend({
+        template: '#hello'
+    });
+
+    // initialize component then inject to #app's  bottom
+    var component = new HelloRegular({
+        data: {user: {name: "leeluolee"}}
+    });
+    component.$inject('#app');
+
+</script>
